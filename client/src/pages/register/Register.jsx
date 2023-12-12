@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import Navbar from "../../components/navbar/Navbar"
 import "./register.css";
-
+import { makeRequest } from  '../../axios'
 const Register = () => {
   const [credentials, setCredentials] = useState({
     username: "",
@@ -23,7 +23,7 @@ const Register = () => {
 
     try {
       const res = await axios.post(
-        "http://localhost:5000/api/auth/register",
+        `${makeRequest.defaults.baseURL}/auth/register`,
         credentials
       );
       if(res.status===200){

@@ -1,8 +1,9 @@
 import useFetch from "../../hooks/useFetch";
 import "./featuredProperties.css";
+import { makeRequest } from  '../../axios'
 
 const FeaturedProperties = () => {
-  const { data, loading, error } = useFetch("http://localhost:5000/api/hotels?featured=true&limit=4");
+  const { data, loading, error } = useFetch(`${makeRequest.defaults.baseURL}/hotels?featured=true&limit=4`);
   return (
     <div className="fp">
       {loading ? (

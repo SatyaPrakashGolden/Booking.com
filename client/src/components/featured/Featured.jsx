@@ -1,10 +1,11 @@
 import useFetch from "../../hooks/useFetch";
 import "./featured.css";
+import { makeRequest } from  '../../axios'
 
 const Featured = () => {
-  const { data, loading, error } = useFetch("http://localhost:5000/api/hotels/countByCity?cities=Gurugram,Delhi,Noida");
-  
-
+  // const { data, loading, error } = useFetch("http://localhost:5000/api/hotels/countByCity?cities=Gurugram,Delhi,Noida");
+  const { data, loading, error } = useFetch(`${makeRequest.defaults.baseURL}/hotels/countByCity?cities=Gurugram,Delhi,Noida`);
+console.log(process.env.BACKEND_URL )
   return (
     <div className="featured">
       {loading ? (

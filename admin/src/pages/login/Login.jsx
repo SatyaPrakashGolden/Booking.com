@@ -1,10 +1,10 @@
 import axios from "axios";
 import { useContext, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import Navbar from "../../components/navbar/Navbar"
-import "./login.css";
-import { makeRequest } from  '../../axios'
+// import { AuthContext } from "../../context/AuthContext";
+import "./login.scss";
+
 const Login = () => {
   const [credentials, setCredentials] = useState({
     username: undefined,
@@ -13,7 +13,7 @@ const Login = () => {
 
   const { loading, error, dispatch } = useContext(AuthContext);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setCredentials((prev) => ({ ...prev, [e.target.id]: e.target.value }));
@@ -23,18 +23,23 @@ const Login = () => {
     e.preventDefault();
     dispatch({ type: "LOGIN_START" });
     try {
-      const res = await axios.post(`${makeRequest.defaults.baseURL}/auth/login`, credentials);
-      dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
-      navigate("/")
+      const res = await axios.post("/auth/login", credentials);
+      if (res.data.isAdmin) {
+        dispatch({ type: "LOGIN_SUCCESS", payload: res.data.details });
+
+        navigate("/");
+      } else {
+        dispatch({
+          type: "LOGIN_FAILURE",
+          payload: { message: "You are not allowed!" },
+        });
+      }
     } catch (err) {
       dispatch({ type: "LOGIN_FAILURE", payload: err.response.data });
     }
   };
 
-
   return (
-    <>
-      <Navbar/>
     <div className="login">
       <div className="lContainer">
         <input
@@ -54,12 +59,9 @@ const Login = () => {
         <button disabled={loading} onClick={handleClick} className="lButton">
           Login
         </button>
-        <span> You Don't Have Register Till Now?</span>
-          <Link to="/register">Register here</Link>
         {error && <span>{error.message}</span>}
       </div>
     </div>
-    </>
   );
 };
 
